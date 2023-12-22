@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Service = require('../models/Service');
 
 const registerUser = async (req, res) => {
   const { email, password, fullName, address, contact } = req.body;
@@ -33,11 +34,37 @@ const loginUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, '-password'); // Excluding password field
+    const users = await User.find({}, '-password'); 
     res.status(200).json({ users });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching users', error: error.message });
   }
 };
 
-module.exports = { registerUser, loginUser, getAllUsers };
+
+const addService = async (req, res) => {
+  const { userId, title, description, charges, duration, image } = req.body;
+
+  try {
+    const newService = new Service({
+      userId,
+      title,
+      description,
+      charges,
+      duration,
+      image, 
+    });
+
+    console.log("newService from userContoller------------")
+    console.log(newService)
+
+    await newService.save();
+
+    res.status(201).json({ message: 'Service added successfully' });
+  } catch (error) {
+    console.error('Error adding service:', error);
+    res.status(500).json({ message: 'Failed to add service', error: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, getAllUsers , addService};
