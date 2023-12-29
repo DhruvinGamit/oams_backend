@@ -4,6 +4,8 @@ const { connectDB } = require("./db/db");
 const cors = require("cors");
 const userRoutes = require('./routes/userRoutes');
 const homeRoutes = require('./routes/homeRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+
 
 connectDB();
 
@@ -15,6 +17,7 @@ app.use(cors());
 
 app.use('/api/home', homeRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/categories', categoryRoutes);
 
 
 const PORT = process.env.PORT || 8080;

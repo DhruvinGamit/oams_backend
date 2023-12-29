@@ -1,5 +1,7 @@
+const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const Service = require('../models/Service');
+const { checkPassword, newToken } = require('../utils'); 
 
 const registerUser = async (req, res) => {
   const { email, password, fullName, address, contact } = req.body;
@@ -8,8 +10,12 @@ const registerUser = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
-    const newUser = new User({ email, password, fullName, address, contact });
+
+    // Hash password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ email, password: hashedPassword, fullName, address, contact });
     await newUser.save();
+    
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Registration failed', error: error.message });
@@ -23,10 +29,15 @@ const loginUser = async (req, res) => {
     if (!existingUser) {
       return res.status(404).json({ message: 'User not found' });
     }
-    if (password !== existingUser.password) {
+
+    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+    if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-    res.status(200).json({ message: 'Login successful', token: 'your-generated-token' });
+
+    const token = newToken(existingUser); // Generate JWT
+
+    res.status(200).json({ message: 'Login successful', token }); // Return JWT to the client
   } catch (error) {
     res.status(500).json({ message: 'Login failed', error: error.message });
   }
@@ -41,9 +52,8 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-
 const addService = async (req, res) => {
-  const { userId, title, description, charges, duration, image } = req.body;
+  const { userId, title, description, charges, duration, image, address } = req.body;
 
   try {
     const newService = new Service({
@@ -52,11 +62,9 @@ const addService = async (req, res) => {
       description,
       charges,
       duration,
-      image, 
+      image,
+      address,
     });
-
-    console.log("newService from userContoller------------")
-    console.log(newService)
 
     await newService.save();
 
@@ -67,4 +75,4 @@ const addService = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getAllUsers , addService};
+module.exports = { registerUser, loginUser, getAllUsers, addService };

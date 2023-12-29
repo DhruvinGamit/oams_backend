@@ -1,5 +1,6 @@
 // homeController.js
 const Service = require('../models/Service');
+const Category = require('../models/Category')
 
 const getAllServices = async (req, res) => {
   try {
@@ -25,5 +26,15 @@ const getServiceById = async (req, res) => {
   }
 };
 
+const getAllCategories = async (req, res) => {
+  try {
+    const Categories = await Category.find();
+    res.status(200).json({ Categories });
+  } catch (error) {
+    console.error('Error fetching Categories:', error);
+    res.status(500).json({ message: 'Error fetching Categories', error: error.message });
+  }
+};
 
-module.exports = { getAllServices, getServiceById };
+
+module.exports = { getAllServices, getServiceById , getAllCategories };
