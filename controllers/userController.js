@@ -36,8 +36,8 @@ const loginUser = async (req, res) => {
     }
 
     const token = newToken(existingUser); // Generate JWT
-
-    res.status(200).json({ message: 'Login successful', token }); // Return JWT to the client
+    const userId = existingUser._id;
+    res.status(200).json({ message: 'Login successful', token , userId  }); // Return JWT to the client
   } catch (error) {
     res.status(500).json({ message: 'Login failed', error: error.message });
   }
