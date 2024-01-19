@@ -107,6 +107,7 @@ router.post('/', async (req, res) => {
 // Function to send appointment confirmation email
 const sendAppointmentConfirmationEmail = async (userId, date, time, serviceId) => {
   try {
+
     // Fetch the service directly from the service table
     const service = await Service.findById(serviceId);
 
@@ -126,25 +127,25 @@ const sendAppointmentConfirmationEmail = async (userId, date, time, serviceId) =
     }
 
     const userEmail = user.email;
+    console.log("user email")
+    console.log(userEmail)
 
     // Create a Nodemailer transporter
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'dhruving21@gmail.com', // Replace with your Gmail email
-        pass: 'lqlo pjsm zxrm vlwi', // Replace with your Gmail password
+        user: 'dhruving21@gmail.com', 
+        pass: 'lqlo pjsm zxrm vlwi', 
       },
     });
 
-    // Define email options
     const mailOptions = {
-      from: 'dhruving21@gmail.com', // Replace with your Gmail email or any other default email
-      to: 'jamkarabhishek@gmail.com', // Use the fetched email address
+      from: 'dhruving21@gmail.com', 
+      to: userEmail , 
       subject: 'Appointment Confirmation',
       text: `Your appointment for service ID ${serviceId} is confirmed.\nDate: ${date}\nTime: ${time}`,
     };
 
-    // Send the email
     const info = await transporter.sendMail(mailOptions);
 
     console.log('Email sent:', info.response);

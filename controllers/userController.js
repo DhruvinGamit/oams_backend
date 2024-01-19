@@ -53,7 +53,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const addService = async (req, res) => {
-  const { userId, title, description, charges, duration, image, address } = req.body;
+  const { userId, title, description, charges, duration, image, address ,categoryId} = req.body;
 
   try {
     const newService = new Service({
@@ -64,6 +64,7 @@ const addService = async (req, res) => {
       duration,
       image,
       address,
+      categoryId,
     });
 
     await newService.save();
