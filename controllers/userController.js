@@ -67,6 +67,8 @@ const addService = async (req, res) => {
       categoryId,
     });
 
+    console.log(newService);
+
     await newService.save();
 
     res.status(201).json({ message: 'Service added successfully' });

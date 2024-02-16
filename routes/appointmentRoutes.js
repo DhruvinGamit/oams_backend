@@ -108,17 +108,13 @@ router.post('/', async (req, res) => {
 const sendAppointmentConfirmationEmail = async (userId, date, time, serviceId) => {
   try {
 
-    // Fetch the service directly from the service table
     const service = await Service.findById(serviceId);
-
     if (!service) {
       console.error('Service not found for serviceId:', serviceId);
       return;
     }
 
     const serviceUserId = service.userId;
-
-    // Use the userId to find the email of the user who owns the service
     const user = await User.findById(serviceUserId);
 
     if (!user) {
@@ -130,7 +126,6 @@ const sendAppointmentConfirmationEmail = async (userId, date, time, serviceId) =
     console.log("user email")
     console.log(userEmail)
 
-    // Create a Nodemailer transporter
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -155,13 +150,12 @@ const sendAppointmentConfirmationEmail = async (userId, date, time, serviceId) =
 };
 
 
-
 // Fetch appointments for the logged-in user
 router.get('/user', async (req, res) => {
   try {
     const userId = req.query.userId;
 
-    const appointments = await Appointment.find({ userId }).populate({
+    const appointments = await Appointment.find({ userId : userId }).populate({
       path: 'serviceId',
       select: 'title', 
     });
@@ -189,16 +183,75 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+
 // Fetch appointments for the service owner
+// router.get('/service', async (req, res) => {
+//   try {
+//     const userId = req.query.userId; 
+//     const appointments = await Appointment.find({ serviceId });
+//     res.status(200).json({ appointments });
+//   } catch (error) {
+//     console.error('Error fetching appointments:', error);
+//     res.status(500).json({ error: 'Internal server error.' });
+//   }
+// });
+//--------------------------------------------------------------------------------------------------------------
+// router.get('/appointments', async (req, res) => {
+//   try {
+//     const userId = req.query.userId;
+
+//     // Fetch all services associated with the user
+//     const services = await Service.find({ userId });
+//     console.log("service------")
+//     console.log(services)
+    
+//     // Extract serviceIds from services
+//     const serviceIds = services.map(service => service._id);
+//     console.log("serviceIds------")
+//     console.log(serviceIds)
+
+//     // Fetch appointments for the user and serviceIds
+//     const appointments = await Appointment.find({ serviceId: { $in: serviceIds } });
+//     console.log("appointments------")
+//     console.log(appointments)
+
+
+//     res.status(200).json({ appointments });
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//     res.status(500).json({ error: 'Internal server error.' });
+//   }
+// });
+
+// Fetch appointments for the logged-in user
 router.get('/service', async (req, res) => {
   try {
-    const serviceId = req.user.id; 
-    const appointments = await Appointment.find({ serviceId });
+    const userId = req.query.userId;
+
+    // Fetch all services associated with the user
+    const services = await Service.find({ userId });
+    console.log("services------")
+    console.log(services)
+    
+    // Extract serviceIds from services
+    const serviceIds = services.map(service => service._id);
+    console.log("serviceIds------")
+    console.log(serviceIds)
+
+    // Fetch appointments for the user and serviceIds
+    const appointments = await Appointment.find({ serviceId: { $in: serviceIds } });
+    console.log("appointments------")
+    console.log(appointments)
+
     res.status(200).json({ appointments });
   } catch (error) {
-    console.error('Error fetching appointments:', error);
+    console.error('Error fetching data:', error);
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
+
+
+
+
 
 module.exports = router;
