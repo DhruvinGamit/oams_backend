@@ -3,8 +3,31 @@ const User = require('../models/User');
 const Service = require('../models/Service');
 const { checkPassword, newToken } = require('../utils'); 
 
+//befor adding provider
+// const registerUser = async (req, res) => {
+//   const { email, password, fullName, address, contact } = req.body;
+//   try {
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.status(400).json({ message: 'User already exists' });
+//     }
+
+//     // Hash password before saving
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     const newUser = new User({ email, password: hashedPassword, fullName, address, contact });
+//     await newUser.save();
+    
+//     res.status(201).json({ message: 'User registered successfully' });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Registration failed', error: error.message });
+//   }
+// };
+
+
+//after adding provider
+// userController.js
 const registerUser = async (req, res) => {
-  const { email, password, fullName, address, contact } = req.body;
+  const { email, password, fullName, address, contact, isServiceProvider } = req.body;
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -13,18 +36,27 @@ const registerUser = async (req, res) => {
 
     // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ email, password: hashedPassword, fullName, address, contact });
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+      fullName,
+      address,
+      contact,
+      isServiceProvider,
+    });
     await newUser.save();
-    
+
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Registration failed', error: error.message });
   }
 };
 
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
+    console.log("in loginUser")
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
       return res.status(404).json({ message: 'User not found' });
@@ -37,7 +69,8 @@ const loginUser = async (req, res) => {
 
     const token = newToken(existingUser); // Generate JWT
     const userId = existingUser._id;
-    res.status(200).json({ message: 'Login successful', token , userId  }); // Return JWT to the client
+    const isProvider = existingUser.isProvider;
+    res.status(200).json({ message: 'Login successful', token , userId , isProvider }); // Return JWT to the client
   } catch (error) {
     res.status(500).json({ message: 'Login failed', error: error.message });
   }

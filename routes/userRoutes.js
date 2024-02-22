@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+// const multer = require('multer');
+// const upload = multer({ dest: 'uploads/' });
 const { registerUser, loginUser, getAllUsers , addService} = require('../controllers/userController');
 
 router.post('/register', registerUser);
