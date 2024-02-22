@@ -16,6 +16,6 @@ const { getAllServices, getServiceById, getAllCategories, getServicesByCategory 
 router.get('/services', getAllServices);
 router.get('/services/:id', getServiceById);
 router.get('/categories', getAllCategories);
-router.get('/category/:categoryId/services', getServicesByCategory); // Added route for category-specific services
+router.get('/category/:categoryId', getServicesByCategory); // Added route for category-specific services
 
 module.exports = router;

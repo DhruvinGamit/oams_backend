@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const serviceSchema = mongoose.Schema({
   userId: {
     type: mongoose.Types.ObjectId,
-    ref: 'user',
+    ref: 'User',
     required: true,
   },
   categoryId: {
@@ -40,7 +40,7 @@ const serviceSchema = mongoose.Schema({
   },
 });
 
-const Service = mongoose.model('service', serviceSchema);
+const Service = mongoose.model('Service', serviceSchema);
 
 module.exports = Service;
  
