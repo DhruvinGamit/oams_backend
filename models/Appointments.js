@@ -1,15 +1,15 @@
-
 // const mongoose = require('mongoose');
+
 
 // const appointmentSchema = new mongoose.Schema({
 //   userId: {
 //     type: mongoose.Types.ObjectId,
-//     ref: 'user',
+//     ref: 'User', // Use 'User' instead of 'user'
 //     required: true,
 //   },
 //   serviceId: {
 //     type: mongoose.Types.ObjectId,
-//     ref: 'service',
+//     ref: 'Service', // Use 'Service' instead of 'service'
 //     required: true,
 //   },
 //   date: {
@@ -29,22 +29,22 @@
 //   timestamps: true,
 // });
 
-// const Appointment = mongoose.model('appointment', appointmentSchema);
+
+// const Appointment = mongoose.model('Appointment', appointmentSchema);
 // module.exports = Appointment;
 
 
 const mongoose = require('mongoose');
 
-
 const appointmentSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Types.ObjectId,
-    ref: 'User', // Use 'User' instead of 'user'
+    ref: 'User',
     required: true,
   },
   serviceId: {
     type: mongoose.Types.ObjectId,
-    ref: 'Service', // Use 'Service' instead of 'service'
+    ref: 'Service',
     required: true,
   },
   date: {
@@ -60,10 +60,13 @@ const appointmentSchema = new mongoose.Schema({
     enum: ['pending', 'accepted', 'rejected'],
     default: 'pending',
   },
+  paymentId: {
+    type: String, // Adjust the type based on what Razorpay returns for payment_id
+    required: true,
+  },
 }, {
   timestamps: true,
 });
-
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 module.exports = Appointment;

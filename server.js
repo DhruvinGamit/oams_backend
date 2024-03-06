@@ -21,7 +21,9 @@ app.use('/api/home', homeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/appointments', appointmentRoutes);
+// Change this route path in your server-side code
 app.use('/api/payment', paymentRoutes);
+
 
 
 const PORT = process.env.PORT || 8080;

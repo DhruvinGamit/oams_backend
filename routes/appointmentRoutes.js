@@ -9,7 +9,7 @@ const User = require("../models/User");
 // Create a new appointment
 router.post("/", async (req, res) => {
   try {
-    const { userId, serviceId, date, time } = req.body;
+    const { userId, serviceId, date, time, paymentId } = req.body; // Include paymentId in the destructuring
 
     const appointment = new Appointment({
       userId,
@@ -17,6 +17,7 @@ router.post("/", async (req, res) => {
       date,
       time,
       status: "pending",
+      paymentId, // Include the paymentId in the appointment creation
     });
 
     await appointment.save();
@@ -33,6 +34,7 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
 
 // Function to send appointment request confirmation email
 const sendAppointmentRequestConfirmationEmail = async (
