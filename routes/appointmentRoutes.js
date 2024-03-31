@@ -567,7 +567,8 @@ router.get("/RequestedServices", async (req, res) => {
     const userId = req.query.userId;
     console.log(userId);
 
-    const appointments = await Appointment.find({ userId: userId }).populate({
+    // Fetch appointments with payment ID prefix "order"
+    const appointments = await Appointment.find({ userId: userId, paymentId: /^order/ }).populate({
       path: "serviceId",
       select: "title",
     });
@@ -578,6 +579,7 @@ router.get("/RequestedServices", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
 
 // Delete appointment
 router.delete("/:id", async (req, res) => {
@@ -624,27 +626,25 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-// Fetch appointments for the logged-in user
+
 router.get("/ServiceAppointments", async (req, res) => {
   try {
     const userId = req.query.userId;
 
     // Fetch all services associated with the user
     const services = await Service.find({ userId });
-    console.log("services------");
-    console.log(services);
 
     // Extract serviceIds from services
     const serviceIds = services.map((service) => service._id);
-    console.log("serviceIds------");
-    console.log(serviceIds);
 
-    // Fetch appointments for the user and serviceIds
+    // Fetch appointments for the user and serviceIds with payment ID prefix "order"
     const appointments = await Appointment.find({
       serviceId: { $in: serviceIds },
-    });
-    console.log("appointments------");
-    console.log(appointments);
+      paymentId: { $regex: /^order/i } // Prefix match for payment ID
+    }).populate({
+      path: 'userId',
+      select: 'email'
+    }).sort('-createdAt'); // Sort by creation date in descending order
 
     res.status(200).json({ appointments });
   } catch (error) {
@@ -652,6 +652,8 @@ router.get("/ServiceAppointments", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
+
 
 // Notify and send email
 router.post("/notify", async (req, res) => {

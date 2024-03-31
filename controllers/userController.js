@@ -3,31 +3,11 @@ const User = require('../models/User');
 const Service = require('../models/Service');
 const { checkPassword, newToken } = require('../utils'); 
 
-//befor adding provider
-// const registerUser = async (req, res) => {
-//   const { email, password, fullName, address, contact } = req.body;
-//   try {
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       return res.status(400).json({ message: 'User already exists' });
-//     }
-
-//     // Hash password before saving
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     const newUser = new User({ email, password: hashedPassword, fullName, address, contact });
-//     await newUser.save();
-    
-//     res.status(201).json({ message: 'User registered successfully' });
-//   } catch (error) {
-//     res.status(500).json({ message: 'Registration failed', error: error.message });
-//   }
-// };
-
-
 //after adding provider
+
 // userController.js
 const registerUser = async (req, res) => {
-  const { email, password, fullName, address, contact, isServiceProvider } = req.body;
+  const { email, password, fullName, address, contact, isProvider } = req.body;
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -42,7 +22,7 @@ const registerUser = async (req, res) => {
       fullName,
       address,
       contact,
-      isServiceProvider,
+      isProvider,
     });
     await newUser.save();
 
@@ -101,7 +81,6 @@ const addService = async (req, res) => {
     });
 
     console.log(newService);
-
     await newService.save();
 
     res.status(201).json({ message: 'Service added successfully' });
