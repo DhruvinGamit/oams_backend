@@ -55,8 +55,6 @@
 // //   }
 // // });
 
-
-
 // router.get("/checkAvailability", async (req, res) => {
 //   try {
 //     const serviceId = req.query.serviceId;
@@ -108,9 +106,6 @@
 //     res.status(500).json({ error: "Internal server error." });
 //   }
 // });
-
-
-
 
 // // Function to send appointment request confirmation email
 // const sendAppointmentRequestConfirmationEmail = async (
@@ -366,17 +361,16 @@
 
 // module.exports = router;
 
-
-
-
 //=====================================================================================================================================================
+
+
 const express = require("express");
 const router = express.Router();
 const Appointment = require("../models/appointments");
 const nodemailer = require("nodemailer");
 const Service = require("../models/Service");
 const User = require("../models/User");
-const moment = require('moment-timezone');
+const moment = require("moment-timezone");
 
 // Create a new appointment
 router.post("/", async (req, res) => {
@@ -406,7 +400,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-
 router.get("/checkAvailability", async (req, res) => {
   try {
     const serviceId = req.query.serviceId;
@@ -414,13 +407,15 @@ router.get("/checkAvailability", async (req, res) => {
     const startTimeString = req.query.time;
 
     // Check if the start time string is in the correct format
-    if (!moment(startTimeString, 'HH:mm', true).isValid()) {
+    if (!moment(startTimeString, "HH:mm", true).isValid()) {
       console.error("Invalid start time format:", startTimeString);
       return res.status(400).json({ error: "Invalid start time format." });
     }
 
     // Convert start time string to Indian time zone
-    const startTime = moment.tz(startTimeString, 'HH:mm', 'Asia/Kolkata').toDate();
+    const startTime = moment
+      .tz(startTimeString, "HH:mm", "Asia/Kolkata")
+      .toDate();
     console.log("Start Time : ", startTime);
 
     const service = await Service.findById(serviceId);
@@ -437,8 +432,8 @@ router.get("/checkAvailability", async (req, res) => {
     }
 
     // Calculate end time based on start time and service duration
-    const endTime = moment(startTime).add(serviceDuration, 'minutes').toDate();
-    console.log("endtime : " , endTime)
+    const endTime = moment(startTime).add(serviceDuration, "minutes").toDate();
+    console.log("endtime : ", endTime);
 
     // Query for existing appointments that overlap with the selected time slot
     const existingAppointments = await Appointment.find({
@@ -448,13 +443,19 @@ router.get("/checkAvailability", async (req, res) => {
         {
           $and: [
             { time: { $gte: startTimeString } },
-            { time: { $lt: moment(endTime).format('HH:mm') } },
+            { time: { $lt: moment(endTime).format("HH:mm") } },
           ],
         },
         {
           $and: [
             { time: { $lte: startTimeString } },
-            { time: { $gt: moment(startTime).subtract(serviceDuration, 'minutes').format('HH:mm') } },
+            {
+              time: {
+                $gt: moment(startTime)
+                  .subtract(serviceDuration, "minutes")
+                  .format("HH:mm"),
+              },
+            },
           ],
         },
       ],
@@ -466,8 +467,6 @@ router.get("/checkAvailability", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
-
-
 
 const sendAppointmentRequestConfirmationEmail = async (
   userId,
@@ -487,16 +486,18 @@ const sendAppointmentRequestConfirmationEmail = async (
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "dhruving21@gmail.com", // Replace with your email
-        pass: "lqlo pjsm zxrm vlwi", // Replace with your password
+        user: "dhruving21@gmail.com", 
+        pass: "lqlo pjsm zxrm vlwi", 
       },
     });
 
     const mailOptions = {
-      from: "dhruving21@gmail.com", // Replace with your email
+      from: "dhruving21@gmail.com", 
       to: currUserEmail,
       subject: "Appointment Confirmation",
-      text: `Your appointment request has been generated successfully.\nDate: ${date}\nTime: ${moment.tz(time, 'Asia/Kolkata').format('HH:mm')}`,
+      text: `Your appointment request has been generated successfully.\nDate: ${date}\nTime: ${moment
+        .tz(time, "Asia/Kolkata")
+        .format("HH:mm")}`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -538,16 +539,18 @@ const sendAppointmentConfirmationEmail = async (
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "dhruving21@gmail.com", // Replace with your email
-        pass: "lqlo pjsm zxrm vlwi", // Replace with your password
+        user: "dhruving21@gmail.com",
+        pass: "lqlo pjsm zxrm vlwi", 
       },
     });
 
     const mailOptions = {
-      from: "dhruving21@gmail.com", // Replace with your email
+      from: "dhruving21@gmail.com", 
       to: userEmail,
       subject: "Appointment Confirmation",
-      text: `Your service has been requested by ${currUserEmail}.\nDate: ${date}\nTime: ${moment.tz(time, 'Asia/Kolkata').format('HH:mm')}`,
+      text: `Your service has been requested by ${currUserEmail}.\nDate: ${date}\nTime: ${moment
+        .tz(time, "Asia/Kolkata")
+        .format("HH:mm")}`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -568,7 +571,10 @@ router.get("/RequestedServices", async (req, res) => {
     console.log(userId);
 
     // Fetch appointments with payment ID prefix "order"
-    const appointments = await Appointment.find({ userId: userId, paymentId: /^order/ }).populate({
+    const appointments = await Appointment.find({
+      userId: userId,
+      paymentId: /^pay/,
+    }).populate({
       path: "serviceId",
       select: "title",
     });
@@ -579,7 +585,6 @@ router.get("/RequestedServices", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
-
 
 // Delete appointment
 router.delete("/:id", async (req, res) => {
@@ -599,6 +604,7 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
 
 // Update appointment status
 router.patch("/:id", async (req, res) => {
@@ -640,11 +646,13 @@ router.get("/ServiceAppointments", async (req, res) => {
     // Fetch appointments for the user and serviceIds with payment ID prefix "order"
     const appointments = await Appointment.find({
       serviceId: { $in: serviceIds },
-      paymentId: { $regex: /^order/i } // Prefix match for payment ID
-    }).populate({
-      path: 'userId',
-      select: 'email'
-    }).sort('-createdAt'); // Sort by creation date in descending order
+      paymentId: { $regex: /^pay/i }, // Prefix match for payment ID
+    })
+      .populate({
+        path: "userId",
+        select: "email",
+      })
+      .sort("-createdAt"); // Sort by creation date in descending order
 
     res.status(200).json({ appointments });
   } catch (error) {
@@ -652,8 +660,6 @@ router.get("/ServiceAppointments", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
-
-
 
 // Notify and send email
 router.post("/notify", async (req, res) => {
