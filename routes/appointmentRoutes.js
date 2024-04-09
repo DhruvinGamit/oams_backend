@@ -495,9 +495,7 @@ const sendAppointmentRequestConfirmationEmail = async (
       from: "dhruving21@gmail.com", 
       to: currUserEmail,
       subject: "Appointment Confirmation",
-      text: `Your appointment request has been generated successfully.\nDate: ${date}\nTime: ${moment
-        .tz(time, "Asia/Kolkata")
-        .format("HH:mm")}`,
+      text: `Your appointment request has been generated successfully.\nDate: ${date}\nTime: ${time}`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -548,9 +546,7 @@ const sendAppointmentConfirmationEmail = async (
       from: "dhruving21@gmail.com", 
       to: userEmail,
       subject: "Appointment Confirmation",
-      text: `Your service has been requested by ${currUserEmail}.\nDate: ${date}\nTime: ${moment
-        .tz(time, "Asia/Kolkata")
-        .format("HH:mm")}`,
+      text: `Your service has been requested by ${currUserEmail}.\nDate: ${date}\nTime: ${time}`,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -636,23 +632,22 @@ router.patch("/:id", async (req, res) => {
 router.get("/ServiceAppointments", async (req, res) => {
   try {
     const userId = req.query.userId;
-
-    // Fetch all services associated with the user
     const services = await Service.find({ userId });
-
-    // Extract serviceIds from services
     const serviceIds = services.map((service) => service._id);
 
-    // Fetch appointments for the user and serviceIds with payment ID prefix "order"
     const appointments = await Appointment.find({
       serviceId: { $in: serviceIds },
-      paymentId: { $regex: /^pay/i }, // Prefix match for payment ID
+      paymentId: { $regex: /^pay/i }, 
     })
       .populate({
         path: "userId",
         select: "email",
       })
-      .sort("-createdAt"); // Sort by creation date in descending order
+      .populate({
+        path: "serviceId",
+        select: "title", 
+      })
+      .sort("-createdAt"); 
 
     res.status(200).json({ appointments });
   } catch (error) {
@@ -660,6 +655,7 @@ router.get("/ServiceAppointments", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
 
 // Notify and send email
 router.post("/notify", async (req, res) => {
