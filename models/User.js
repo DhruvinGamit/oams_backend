@@ -1,5 +1,3 @@
-
-// models/User.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -20,7 +18,7 @@ const userSchema = new mongoose.Schema({
   },
   isProvider: {
     type: Boolean,
-    default: false, 
+    default: false,
   },
 }, {
   timestamps: true,
