@@ -27,6 +27,7 @@ router.post("/login", loginUser);
 // router.post('/addServices', addService);
 
 // Route to fetch all users (for admin)
+router.delete('/deleteProvider/:email', deleteProvider);
 
 router.get("/", getAllUsers);
 
