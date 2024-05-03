@@ -6,6 +6,7 @@ const {
   loginUser,
   getAllUsers,
   addService,
+  deleteProvider,
 } = require("../controllers/userController");
 
 const storage = multer.diskStorage({
