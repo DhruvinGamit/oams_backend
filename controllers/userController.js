@@ -3,10 +3,7 @@ const User = require('../models/User');
 const Service = require('../models/Service');
 const { checkPassword, newToken } = require('../utils'); 
 
-
-// // Importing necessary modules
-// const multer = require('multer');
-
+//after adding provider
 
 // userController.js
 const registerUser = async (req, res) => {
@@ -125,4 +122,22 @@ const addService = async (req, res) => {
 
 
 
-module.exports = { registerUser, loginUser, getAllUsers, addService };
+// Controller function to delete a provider by email
+const deleteProvider = async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    // Find and delete the provider by email
+    const deletedProvider = await User.findOneAndDelete({ email });
+
+    if (!deletedProvider) {
+      return res.status(404).json({ message: 'Provider not found' });
+    }
+
+    res.status(200).json({ message: 'Provider deleted successfully', deletedProvider });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete provider', error: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, getAllUsers, addService, deleteProvider };
