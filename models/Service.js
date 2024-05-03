@@ -27,10 +27,15 @@ const serviceSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  image: {
-    type: String,
-    required: true,
+  // image: {
+  //   type: String,
+  //   required: true,
+  // },
+  file: { // Update the schema definition for the file field
+    type: Object,
+    default: null, // Set a default value of null for the file field
   },
+
   address: {
     street: String,
     city: String,

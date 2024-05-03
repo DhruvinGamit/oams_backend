@@ -3,7 +3,10 @@ const User = require('../models/User');
 const Service = require('../models/Service');
 const { checkPassword, newToken } = require('../utils'); 
 
-//after adding provider
+
+// // Importing necessary modules
+// const multer = require('multer');
+
 
 // userController.js
 const registerUser = async (req, res) => {
@@ -65,8 +68,39 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+// const addService = async (req, res) => {
+//   const { userId, title, description, charges, duration, file, address ,categoryId} = req.body;
+
+//   try {
+//     const newService = new Service({
+//       userId,
+//       title,
+//       description,
+//       charges,
+//       duration,
+//       file,
+//       address,
+//       categoryId,
+//     });
+
+//     console.log(newService);
+//     await newService.save();
+
+//     res.status(201).json({ message: 'Service added successfully' });
+//   } catch (error) {
+//     console.error('Error adding service:', error);
+//     res.status(500).json({ message: 'Failed to add service', error: error.message });
+//   }
+// };
+
+
 const addService = async (req, res) => {
-  const { userId, title, description, charges, duration, image, address ,categoryId} = req.body;
+  const { userId, title, description, charges, duration, categoryId } = req.body;
+  const file = req.file; // Access the uploaded file
+
+  const { street, city, state, country, zip } = req.body; // Destructure address fields
+
+  const address = { street, city, state, country, zip }; // Construct the address object
 
   try {
     const newService = new Service({
@@ -75,12 +109,11 @@ const addService = async (req, res) => {
       description,
       charges,
       duration,
-      image,
+      file,
       address,
       categoryId,
     });
 
-    console.log(newService);
     await newService.save();
 
     res.status(201).json({ message: 'Service added successfully' });
@@ -89,5 +122,7 @@ const addService = async (req, res) => {
     res.status(500).json({ message: 'Failed to add service', error: error.message });
   }
 };
+
+
 
 module.exports = { registerUser, loginUser, getAllUsers, addService };

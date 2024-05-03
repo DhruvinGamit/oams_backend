@@ -21,6 +21,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/serviceImages', express.static('uploads'));
+
 
 
 const PORT = process.env.PORT || 8080;
