@@ -95,9 +95,9 @@ const addService = async (req, res) => {
   const { userId, title, description, charges, duration, categoryId } = req.body;
   const file = req.file; // Access the uploaded file
 
-  const { street, city, state, country, zip } = req.body; // Destructure address fields
+  const { street, city, state, country, zip } = req.body; 
 
-  const address = { street, city, state, country, zip }; // Construct the address object
+  const address = { street, city, state, country, zip }; 
 
   try {
     const newService = new Service({
@@ -106,9 +106,9 @@ const addService = async (req, res) => {
       description,
       charges,
       duration,
-      file,
-      address,
       categoryId,
+      image: file.filename,
+      address,
     });
 
     await newService.save();
@@ -121,13 +121,11 @@ const addService = async (req, res) => {
 };
 
 
-
 // Controller function to delete a provider by email
 const deleteProvider = async (req, res) => {
   const { email } = req.params;
 
   try {
-    // Find and delete the provider by email
     const deletedProvider = await User.findOneAndDelete({ email });
 
     if (!deletedProvider) {
