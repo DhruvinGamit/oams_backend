@@ -12,7 +12,7 @@ const {
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // Set the destination path to the desired location
-    cb(null, "C:/Users/dhruv/Desktop/sdp/frontend/src/serviceImages");
+    cb(null, "D:\Sem_6_Sdp_Project\oams_frontend\src\serviceImages");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
