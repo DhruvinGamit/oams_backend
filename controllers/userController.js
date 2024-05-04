@@ -65,31 +65,6 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// const addService = async (req, res) => {
-//   const { userId, title, description, charges, duration, file, address ,categoryId} = req.body;
-
-//   try {
-//     const newService = new Service({
-//       userId,
-//       title,
-//       description,
-//       charges,
-//       duration,
-//       file,
-//       address,
-//       categoryId,
-//     });
-
-//     console.log(newService);
-//     await newService.save();
-
-//     res.status(201).json({ message: 'Service added successfully' });
-//   } catch (error) {
-//     console.error('Error adding service:', error);
-//     res.status(500).json({ message: 'Failed to add service', error: error.message });
-//   }
-// };
-
 
 const addService = async (req, res) => {
   const { userId, title, description, charges, duration, categoryId } = req.body;
