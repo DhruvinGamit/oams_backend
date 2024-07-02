@@ -9,6 +9,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes'); 
 const paymentRoutes = require('./routes/paymentRoutes'); 
 
+console.log("hello from server.....")
 
 connectDB();
 
