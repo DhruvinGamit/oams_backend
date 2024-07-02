@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('oams-backend.vercel.app//api/home', homeRoutes);
+app.use('/api/home', homeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/appointments', appointmentRoutes);
