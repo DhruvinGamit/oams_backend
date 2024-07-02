@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js",
+    "dev": "node backend/server.js",
     "data:import": "node backend/seederScript",
     "build": "echo jsom-e-com"
   },
