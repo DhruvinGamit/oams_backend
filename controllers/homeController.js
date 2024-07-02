@@ -4,6 +4,7 @@ const Category = require('../models/Category');
 const getAllServices = async (req, res) => {
   try {
     const services = await Service.find();
+    console.log("hello from servicessss");
     res.status(200).json({ services });
   } catch (error) {
     console.error('Error fetching services:', error);
