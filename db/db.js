@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const connectDB = async () => {
   try {
     await mongoose.connect(
-      process.env.MONGO_URI || 'mongodb+srv://dhruving21:dGamit@2104@flutterp.j2pbpkd.mongodb.net/?retryWrites=true&w=majority&appName=flutterP',
+      process.env.MONGO_URI || 'mongodb+srv://dhruving21:dGamit%402104@flutterp.j2pbpkd.mongodb.net/?retryWrites=true&w=majority&appName=flutterP',
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
