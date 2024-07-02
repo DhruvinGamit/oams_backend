@@ -1,22 +1,18 @@
-require('dotenv').config()
-const mongoose = require('mongoose')
+require('dotenv').config();
+const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(
-      'mongodb+srv://dhruving21:dGamit%402104@flutterp.j2pbpkd.mongodb.net/?retryWrites=true&w=majority&appName=flutterP',
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        // useFindAndModify: false,
-      },
-    )
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-    console.log('MongoDB connected')
+    console.log('MongoDB connected');
   } catch (error) {
-    console.error('MongoDB connection failed')
-    process.exit(1)
+    console.error('MongoDB connection failed:', error);
+    process.exit(1);
   }
-}
+};
 
-module.exports = {connectDB}
+module.exports = { connectDB };
