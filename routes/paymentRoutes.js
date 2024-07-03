@@ -1,7 +1,7 @@
 const express = require("express");
 const crypto = require("crypto");
 const Razorpay = require("razorpay");
-const Appointment = require("../models/appointments");
+const Appointment = require("../models/Appointments");
 const Service = require("../models/Service");
 
 const router = express.Router();

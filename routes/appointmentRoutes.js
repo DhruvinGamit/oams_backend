@@ -1,9 +1,7 @@
-//=====================================================================================================================================================
-
 
 const express = require("express");
 const router = express.Router();
-const Appointment = require("../models/appointments");
+const Appointment = require("../models/Appointments");
 const nodemailer = require("nodemailer");
 const Service = require("../models/Service");
 const User = require("../models/User");
